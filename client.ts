@@ -1,7 +1,7 @@
-import { Keypair } from "@solana/web3.js";
-import { randomBytes, uuidV4 } from "ethers";
+import {Keypair} from "@solana/web3.js";
+import {randomBytes, uuidV4} from "ethers";
 import bs58 from "bs58";
-import { UniversalWallet, WalletType } from "./wallets";
+import {UniversalWallet, WalletType} from "./wallets";
 
 type Proxy = {
 	url: string;
@@ -176,7 +176,7 @@ export class Client {
 			},
 		).then((r) => r.json());
 
-		var dataOutput = this.request(
+		return this.request(
 			"http://mefoundation.com/api/trpc/auth.linkWallet?batch=1",
 			{
 				headers: {
@@ -211,9 +211,7 @@ export class Client {
 				}),
 				method: "POST",
 			},
-		).then((r) => r.json());
-
-		return dataOutput || data
+		).then((r) => r.json())
 	}
 
 	public async request(
