@@ -1,0 +1,24 @@
+{
+  "name": "me_checker",
+  "module": "index.ts",
+  "type": "module",
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "@persevie/statemanjs": "^1.7.1",
+    "@solana/web3.js": "^1.95.4",
+    "async-lock": "^1.4.1",
+    "bitcoin-sdk-js": "^1.0.1",
+    "bs58": "^6.0.0",
+    "bs58check": "^4.0.0",
+    "ethers": "^6.13.4",
+    "inquirer": "^12.1.0",
+    "ora": "^8.1.1",
+    "tweetnacl": "^1.0.3",
+    "tweetnacl-util": "^0.15.1"
+  }
+}
