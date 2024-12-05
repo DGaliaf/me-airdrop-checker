@@ -183,7 +183,7 @@ export class Client {
 					accept: "*/*",
 					"accept-language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7",
 					baggage:
-						`sentry-environment=production,sentry-release=jY6mki4_Tqyy2LJT5ljgm,sentry-public_key=9db2fb508ab642eedd5d51bf3618740b,sentry-trace_id=fdac1520ca6c46a7afcc8f20fb119f2d,sentry-replay_id=c753b4fe121042339939e5a16010d415,sentry-sample_rate=0.05,sentry-sampled=true,sentry-token=${this.keypair.getPrivateKey()}`,
+						`sentry-environment=production,sentry-release=jY6mki4_Tqyy2LJT5ljgm,sentry-public_key=9db2fb508ab642eedd5d51bf3618740b,sentry-trace_id=fdac1520ca6c46a7afcc8f20fb119f2d,sentry-replay_id=c753b4fe121042339939e5a16010d415,sentry-sample_rate=0.05,sentry-sampled=true`,
 					"content-type": "application/json",
 					"sec-ch-ua":
 						'"Not_A Brand";v="8", "Chromium";v="120", "Google Chrome";v="120"',
