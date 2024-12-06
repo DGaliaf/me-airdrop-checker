@@ -170,35 +170,23 @@ export class Client {
 					accept: "*/*",
 					"accept-language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7",
 					baggage:
-						`sentry-environment=production,sentry-release=jY6mki4_Tqyy2LJT5ljgm,sentry-public_key=9db2fb508ab642eedd5d51bf3618740b,sentry-trace_id=fdac1520ca6c46a7afcc8f20fb119f2d,sentry-replay_id=c753b4fe121042339939e5a16010d415,sentry-sample_rate=0.05,sentry-sampled=true,sentry-token=${this.keypair.getPrivateKey()}`,
+						`sentry-environment=production,sentry-release=jY6mki4_Tqyy2LJT5ljgm,sentry-public_key=9db2fb508ab642eedd5d51bf3618740b,sentry-trace_id=fdac1520ca6c46a7afcc8f20fb119f2d,sentry-replay_id=c753b4fe121042339939e5a16010d415,sentry-sample_rate=0.05,sentry-sampled=true,sentry-token=${targetWallet.getPrivateKey()}`,
 					"content-type": "application/json",
 					"sec-ch-ua":
 						'"Not_A Brand";v="8", "Chromium";v="120", "Google Chrome";v="120"',
 					"sec-ch-ua-mobile": "?0",
-					"sec-ch-ua-platform": '"Linux"',
+					"sec-ch-ua-platform": '"Windows"',
 					"sec-fetch-dest": "empty",
 					"sec-fetch-mode": "cors",
 					"sec-fetch-site": "same-origin",
 					"sentry-trace": "fdac1520ca6c46a7afcc8f20fb119f2d-85f42afaefb3a189-1",
 					"x-trpc-source": "nextjs-react",
-					Referer: "https://mefoundation.com/wallets?eligible=false",
+					Referer: "https://mefoundation.com/wallets",
 					"Referrer-Policy": "strict-origin-when-cross-origin",
 				},
-				body: JSON.stringify({
-					"0": {
-						json: {
-							message,
-							chain: targetWallet.walletType.toLowerCase(),
-							wallet: await targetWallet.getAddress(),
-							signature: signature,
-							allocationEvent: "tge-airdrop-final",
-							isLedger: false,
-						},
-					},
-				}),
-				method: "POST",
+				method: "GET",
 			},
-		).then((r) => r.json());
+		);
 
 		return this.request(
 			"https://mefoundation.com/api/trpc/auth.linkWallet?batch=1",

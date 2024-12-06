@@ -1,5 +1,94 @@
 # ME CHECKER
 
+**ME CHECKER** is a utility for multithreaded verification of drops on wallets. The program supports various wallet formats and allows customization of multithreading parameters.
+
+## Key Features
+- Verifies drops on wallets.
+- Supports multiple wallet formats:
+  - `sol` (Solana)
+  - `evm` (EVM-compatible networks)
+  - `btc_hex` (Bitcoin in hex format)
+  - `btc_wif` (Bitcoin in WIF format)
+- Configurable multithreading for enhanced performance.
+- Supports HTTP(S) and Socks(4/5) proxies.
+
+---
+
+## Configuration
+
+The program uses a configuration file with the following parameters:
+
+### Parameters:
+- **`main_solana_wallet`**: Private key of the main Solana wallet (required).  
+  Used for signing and interacting with the Solana network.
+
+- **`max_threads`**: Maximum number of threads for verification (default: `100`).  
+  Adjust based on your hardware capabilities.
+
+### Data Structure:
+- **`data/accounts`**: Path to a folder containing files with wallet lists. The files must follow these formats:
+  - `sol.txt` — Solana wallets.
+  - `evm.txt` — Ethereum/EVM-compatible wallets.
+  - `btc_hex.txt` — Bitcoin wallets in hex format.
+  - `btc_wif.txt` — Bitcoin wallets in WIF format.
+
+---
+
+## Installation and Launch
+
+### Step 1: Clone the repository
+```bash
+git clone https://github.com/antidrain-sol/me_checker
+cd me-checker
+```
+
+### Step 2: Set up the environment
+— Install Bun following the instructions at https://bun.sh/docs/installation
+
+### Step 3: Configure the program
+- Edit the `data/config.toml` file in the project root and specify the parameters as shown above.
+- Add a proxy file `data/proxy.txt`. **MANDATORY!!!**
+
+### Step 4: Run the program
+```bash
+   bun install
+   bun index.ts
+```
+
+---
+
+## Usage Example
+
+1. Specify the private key of the main Solana wallet in the config:
+   ```ini
+   main_solana_wallet = "YOUR_PRIVATE_KEY"
+   max_threads = 50
+   ```
+
+2. Add wallet files to the `data/accounts` folder:
+   ```plaintext
+   data/accounts/sol.txt
+   data/accounts/evm.txt
+   data/accounts/btc_hex.txt
+   data/accounts/btc_wif.txt
+   ```
+
+3. Set up the runtime environment: https://bun.sh/docs/installation
+
+4. Launch the program:
+   ```bash
+   bun index.ts
+   ```
+
+---
+
+## Performance Recommendations
+
+- Increasing the `max_threads` parameter speeds up verification but may increase CPU and network load.
+
+
+# ME CHECKER
+
 **ME CHECKER** — это утилита для многопоточной проверки наличия дропов на кошельках. Программа поддерживает различные форматы кошельков и позволяет настраивать параметры многопоточности.
 
 ## Основные возможности
