@@ -5,11 +5,18 @@ import { Client } from "./client.ts";
 
 import { Wallet as EvmWallet } from "ethers";
 import { Keypair as SolWallet } from "@solana/web3.js";
-import ora, { oraPromise } from "ora";
+import ora, { oraPromise, type Ora } from "ora";
 import bs58 from "bs58";
 import inquirer from "inquirer";
 import type { Config } from "./types";
 import { chunk } from "./utils.ts";
+import {
+	Action,
+	LoopAction,
+	Menu,
+	MenuPrompt,
+	openMenuPrompt,
+} from "./chat.ts";
 
 async function readConfig(): Promise<Config> {
 	return Bun.TOML.parse(await Bun.file("./data/config.toml").text()) as Config;
@@ -83,6 +90,27 @@ async function mainMenu() {
 
 	spinner.succeed("Success logged in into magiceden account");
 
+	const prompts = {
+		menu: new MenuPrompt("Choose menu", 20, false, [
+			new Action("Link wallets", async () => {
+				await linkWallets(config, spinner, client);
+
+				return "menu";
+			}),
+			new LoopAction("Show points", async () => {
+				console.log(
+					`Total points by linked wallets ${await client.fetchTokens()}`,
+				);
+				return "menu";
+			}),
+			new Action("Exit", () => process.exit(0)),
+		]),
+	};
+
+	await openMenuPrompt("menu", prompts);
+}
+
+async function linkWallets(config: Config, spinner: Ora, client: Client) {
 	const answers = await inquirer.prompt([
 		{
 			type: "list",
@@ -109,23 +137,22 @@ async function mainMenu() {
 
 	spinner.info(`Total wallets: ${wallets.length}`);
 
-	const chunks = chunk(
-		wallets,
-		wallets.length > config.max_threads
+	const chunkSize =
+		wallets.length > 200
 			? Math.ceil(wallets.length / config.max_threads)
-			: wallets.length,
-	);
+			: wallets.length;
+	const chunks = chunk(wallets, chunkSize);
 
 	const successesState = createState<UniversalWallet[]>([]);
 	const checkedState = createState<UniversalWallet[]>([]);
 
 	successesState.subscribe((state) => {
-		spinner.text = `Total eligible wallets: ${state.length}, Checked wallets: ${checkedState.get().length}, Threads: ${config.max_threads}, Accounts per thread: ${Math.round(wallets.length / config.max_threads)}`;
+		spinner.text = `Total eligible wallets: ${state.length}, Checked wallets: ${checkedState.get().length}, Threads: ${config.max_threads}, Accounts per thread: ${Math.round(chunkSize)}`;
 		spinner.render();
 	});
 
 	checkedState.subscribe((state) => {
-		spinner.text = `Total eligible wallets: ${successesState.get().length}, Checked wallets: ${state.length}, Threads: ${config.max_threads}, Accounts per thread: ${Math.round(wallets.length / config.max_threads)}`;
+		spinner.text = `Total eligible wallets: ${successesState.get().length}, Checked wallets: ${state.length}, Threads: ${config.max_threads}, Accounts per thread: ${Math.round(chunkSize)}`;
 		spinner.render();
 	});
 
@@ -169,6 +196,8 @@ async function mainMenu() {
 			.join("\n"),
 	);
 	await file.flush();
+
+	return "menu";
 }
 
 await mainMenu();

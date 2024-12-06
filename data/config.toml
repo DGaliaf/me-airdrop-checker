@@ -1,2 +1,2 @@
 main_solana_wallet = ""
-max_threads = 1
+max_threads = 100

@@ -3,6 +3,7 @@
   "module": "index.ts",
   "type": "module",
   "devDependencies": {
+    "@biomejs/biome": "1.9.0",
     "@types/bun": "latest"
   },
   "peerDependencies": {
@@ -15,10 +16,14 @@
     "bitcoin-sdk-js": "^1.0.1",
     "bs58": "^6.0.0",
     "bs58check": "^4.0.0",
+    "cheerio": "^1.0.0",
     "ethers": "^6.13.4",
     "inquirer": "^12.1.0",
     "ora": "^8.1.1",
     "tweetnacl": "^1.0.3",
     "tweetnacl-util": "^0.15.1"
-  }
+  },
+  "trustedDependencies": [
+    "@biomejs/biome"
+  ]
 }

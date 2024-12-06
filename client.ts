@@ -1,7 +1,8 @@
-import {Keypair} from "@solana/web3.js";
-import {randomBytes, uuidV4} from "ethers";
+import { Keypair } from "@solana/web3.js";
+import { randomBytes, uuidV4 } from "ethers";
 import bs58 from "bs58";
-import {UniversalWallet, WalletType} from "./wallets";
+import { UniversalWallet, WalletType } from "./wallets";
+import { load } from "cheerio";
 
 type Proxy = {
 	url: string;
@@ -64,9 +65,32 @@ export class Client {
 			.join("; ");
 	}
 
+	public async fetchTokens() {
+		const response = await this.request("https://mefoundation.com/wallets", {
+			headers: {
+				"User-Agent":
+					"Mozilla/5.0 (X11; Linux x86_64; rv:133.0) Gecko/20100101 Firefox/133.0",
+				Accept:
+					"text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+				"Accept-Language": "en-US,en;q=0.5",
+				"Upgrade-Insecure-Requests": "1",
+				"Sec-Fetch-Dest": "document",
+				"Sec-Fetch-Mode": "navigate",
+				"Sec-Fetch-Site": "cross-site",
+				Priority: "u=0, i",
+			},
+			method: "GET",
+		});
+
+		const html = await response.text();
+
+		return Number.parseFloat(
+			load(html)("button.inline-flex:nth-child(1)").text().replace(",", ""),
+		);
+	}
+
 	public async verifyAndCreate() {
 		const message = createMessage(this.uuid);
-		// const signature = nacl.sign.detached(decodeUTF8(message), kp.secretKey);
 		const signature = await this.keypair.signMessage(message);
 
 		while (true) {
@@ -100,7 +124,7 @@ export class Client {
 						}),
 					},
 				);
-			} catch (e) {}
+			} catch (e) { }
 		}
 	}
 
@@ -177,13 +201,13 @@ export class Client {
 		).then((r) => r.json());
 
 		return this.request(
-			"http://mefoundation.com/api/trpc/auth.linkWallet?batch=1",
+			"https://mefoundation.com/api/trpc/auth.linkWallet?batch=1",
 			{
 				headers: {
 					accept: "*/*",
 					"accept-language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7",
 					baggage:
-						`sentry-environment=production,sentry-release=jY6mki4_Tqyy2LJT5ljgm,sentry-public_key=9db2fb508ab642eedd5d51bf3618740b,sentry-trace_id=fdac1520ca6c46a7afcc8f20fb119f2d,sentry-replay_id=c753b4fe121042339939e5a16010d415,sentry-sample_rate=0.05,sentry-sampled=true`,
+						"sentry-environment=production,sentry-release=jY6mki4_Tqyy2LJT5ljgm,sentry-public_key=9db2fb508ab642eedd5d51bf3618740b,sentry-trace_id=fdac1520ca6c46a7afcc8f20fb119f2d,sentry-replay_id=c753b4fe121042339939e5a16010d415,sentry-sample_rate=0.05,sentry-sampled=true",
 					"content-type": "application/json",
 					"sec-ch-ua":
 						'"Not_A Brand";v="8", "Chromium";v="120", "Google Chrome";v="120"',
@@ -211,7 +235,7 @@ export class Client {
 				}),
 				method: "POST",
 			},
-		).then((r) => r.json())
+		).then((r) => r.json());
 	}
 
 	public async request(

@@ -48,6 +48,7 @@ cd me-checker
 - Добавьте файл прокси `data/proxy.txt`. **ОБЯЗАТЕЛЬНО!!!**
 ### Шаг 4: Запуск программы
 ```bash
+   bun install
    bun index.ts
 ```
 
